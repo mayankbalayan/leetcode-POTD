@@ -1,0 +1,43 @@
+2561. Rearranging Fruits
+
+Leetcode Link :- https://leetcode.com/problems/rearranging-fruits/description/?envType=daily-question&envId=2025-08-02
+
+class Solution {
+public:
+    long long minCost(vector<int>& basket1, vector<int>& basket2) {
+        unordered_map<int,int> mp;
+        int minEL = INT_MAX;
+        for(int &x : basket1){
+            mp[x]++;
+            minEL = min(minEL,x);
+        }
+        for(int &x : basket2){
+            mp[x]--;
+            minEL = min(minEL,x);
+        }
+
+        vector<int>finallist;
+        for( auto &it : mp ){
+            int cost = it.first;
+            int count = it.second;
+            if(count==0){
+                continue;
+            }
+            if(count%2!=0){
+                return -1;
+            }
+            for(int c=1; c<= abs(count)/2; c++){
+                finallist.push_back(cost);
+            }
+        }
+       // sort(finallist.begin(),finallist.end()); // in place we can also use 
+        nth_element(finallist.begin(),finallist.begin()+finallist.size()/2, finallist.end());
+        long long result =0;
+        for(int i=0; i<finallist.size()/2; i++){
+            // catch here find min of the finallist[i] or the minel*2 because first we can 
+            //swap the number with the min element and then swap the other number with the same min element
+            result+= min(finallist[i],minEL*2);
+        }
+        return result;
+    }
+};
