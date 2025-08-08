@@ -1,0 +1,63 @@
+3479. Fruits Into Baskets III
+
+Leetcode Link:-  https://leetcode.com/problems/fruits-into-baskets-iii/description/?envType=daily-question&envId=2025-08-06
+
+class Solution {
+public:
+// tc is O(nlogn); // n for picking the fruit and seaching it log n 
+// sc is O(4*n);  // because segment tree is made of size 4*n
+void build(int i, int l, int r , vector<int>&baskets, vector<int>&segmentTree){
+    if(l==r){
+        segmentTree[i] = baskets[l];
+        return;
+    }
+
+    int mid = l + (r-l)/2;
+    // left of segment tree i of left is 2*i+1, l is same as of root , r goes from 0 to mid 
+    build(2*i+1 , l , mid , baskets , segmentTree);
+    // right of segment tree , right node i is 2*i+2 , l is the mid+1 , r is same as of root
+    build(2*i+2 , mid+1 , r , baskets , segmentTree);
+
+    segmentTree[i] = max(segmentTree[2*i+1] , segmentTree[2*i+2]);
+}
+
+bool querysegmentTree(int i, int l , int r , vector<int>&segmentTree, int fruit){
+    if(segmentTree[i]<fruit){
+        // root element has max value if its value is less then the fruit value means it cant be placed 
+        return false;
+    }
+    if(l==r){
+        segmentTree[i]=-1;  // mark it and assign the fruit in the basket 
+        return true;
+    }
+
+    int mid = l + (r-l)/2;
+    bool placed = false;
+
+    if(segmentTree[2*i+1]>=fruit){
+        // left side ja skte ho 
+        placed = querysegmentTree(2*i+1,l,mid,segmentTree,fruit);
+    }
+    else{   // segmentTree[2*i+1] < fruit
+       placed = querysegmentTree(2*i+2,mid+1,r,segmentTree,fruit);
+    }
+    // updating the max value 
+    segmentTree[i] = max(segmentTree[2*i+1] , segmentTree[2*i+2]);
+
+    return placed;
+}
+    int numOfUnplacedFruits(vector<int>& fruits, vector<int>& baskets) {
+         int n = fruits.size();
+      vector<int>segmentTree(4*n,-1);
+      // i =0 l =0 to  r = n-1 range 
+      build(0,0,n-1,baskets,segmentTree);
+
+      int unplaced = 0 ;
+      for(int &fruit : fruits){
+        if(querysegmentTree(0,0,n-1,segmentTree,fruit)==false){
+            unplaced++;
+        }
+      }
+      return unplaced;
+    }
+};
