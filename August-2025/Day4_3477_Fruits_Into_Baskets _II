@@ -1,0 +1,27 @@
+3477. Fruits Into Baskets II
+
+Leetcode Link:- https://leetcode.com/problems/fruits-into-baskets-ii/?envType=daily-question&envId=2025-08-05
+
+class Solution {
+public:
+// t.c o(n*2);
+    int numOfUnplacedFruits(vector<int>& fruits, vector<int>& baskets) {
+        int n = fruits.size(); 
+        // storing the count of the placed fruits 
+        int count = 0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                // if the num of fruit is less then the capicity of the basket
+                if(fruits[i]<=baskets[j]){
+                    // increasing the count of the placed fruit
+                    count++;
+                    // marking the basket as 0 to make sure that the basket has placed fruit no more fruits now
+                    baskets[j]=0;
+                    break;
+                }
+            }
+        }
+        // subracting the placed fruits in the basket to return the value of unplaced fruits 
+        return n-count;
+    }
+};
