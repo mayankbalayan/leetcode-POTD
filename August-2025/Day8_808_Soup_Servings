@@ -1,7 +1,10 @@
+
 808. Soup Servings
 
 leetcode link :-  https://leetcode.com/problems/soup-servings/?envType=daily-question&envId=2025-08-08
 
+
+solution
 class Solution {
 public:
 vector<pair<int,int>>serves = {{100,0},{75,25},{50,50},{25,75}};
