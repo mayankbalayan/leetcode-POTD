@@ -1,0 +1,28 @@
+leeetcode 1323 maximum 69 number 
+
+  link:- https://leetcode.com/problems/maximum-69-number/description/?envType=daily-question&envId=2025-08-16
+
+class Solution {
+public:
+    int maximum69Number (int num) {
+    int placeValue = 0;
+    int placeValueSix = -1;
+    int temp = num; 
+    while(temp>0){
+      int rem = temp%10;
+
+      if(rem == 6){
+        placeValueSix = placeValue;
+      }
+      temp = temp/10;
+      placeValue++;
+    }        
+    if(placeValueSix == -1){
+        // we never got the 6
+        return num;
+    }
+    else{
+        return num + 3 * pow(10,placeValueSix);
+    }
+    }
+};
