@@ -1,0 +1,43 @@
+Leetcode 837 new 21 game 
+
+Link:  https://leetcode.com/problems/new-21-game/description/?envType=daily-question&envId=2025-08-17
+
+
+class Solution {
+public:
+    double new21Game(int n, int k, int maxPts) {
+        // // brute force  // TLE 
+        // vector<double>P(n+1,0.0);
+        // //p[i] prob of getting score i
+        // P[0] = 1; // score = 0 prob 0 hi hogi 
+        // for(int i =0; i<=n; i++){
+        //     for(int card = 1; card<= maxPts; card++){
+        //         // probability of score  = 1/maxPts
+        //         // remaining score = P[i-card]
+        //         if(i-card >=0 && i-card<k){
+        //            P[i] += P[i-card] / maxPts;
+        //         }
+        //     }
+        // }
+        // // k to n thak ka prob add krna h 
+        // return accumulate(begin(P)+k, end(P) , 0.0);
+
+
+
+        // optimal sol 
+        vector<double>P(n+1,0.0);
+        P[0] = 1;
+        double currProbSum = (k==0)  ? 0 : 1;
+
+        for(int i =1; i<=n; i++){
+            P[i] = currProbSum/maxPts;
+            if(i<k){
+                currProbSum += P[i];
+            }
+            if(i-maxPts>=0 && i-maxPts<k){
+                currProbSum -= P[i-maxPts];
+            }
+        }
+        return accumulate(begin(P)+k, end(P) , 0.0);
+    }
+};
