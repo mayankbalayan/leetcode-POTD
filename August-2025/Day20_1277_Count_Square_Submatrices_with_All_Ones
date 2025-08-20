@@ -1,0 +1,75 @@
+1277. Count Square Submatrices with All Ones
+
+LINK :- https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/?envType=daily-question&envId=2025-08-20
+
+class Solution {
+public:
+    // int m , n;
+    // int solve(int i , int j ,vector<vector<int>>& matrix ){
+    //     if(i>=m || j>= n){
+    //         return 0;
+    //     }
+    //     if(matrix[i][j]==0)
+    //         return 0;
+
+
+    //     int right = solve(i,j+1,matrix);
+    //     int daigonal = solve(i+1,j+1,matrix);
+    //     int down = solve(i+1,j,matrix);
+        
+
+    //     return 1 + min({right,daigonal,down});
+    // }
+
+
+
+// memo 
+    int m , n;
+    int solve(int i , int j ,vector<vector<int>>& matrix,vector<vector<int>>&t ){
+        if(i>=m || j>= n){
+            return 0;
+        }
+        if(matrix[i][j]==0)
+            return 0;
+        if(t[i][j]!=-1){
+            return t[i][j];
+        }
+
+        int right = solve(i,j+1,matrix,t);
+        int daigonal = solve(i+1,j+1,matrix,t);
+        int down = solve(i+1,j,matrix,t);
+        
+
+        return t[i][j] =  1 + min({right,daigonal,down});
+    }
+    int countSquares(vector<vector<int>>& matrix) {
+        // recursive sol tle 
+        //   m = matrix.size();
+        //  n = matrix[0].size();
+
+        // int result = 0;
+        // for(int i =0 ; i<m; i++){
+        //     for(int j =0 ; j<n; j++){
+        //         if(matrix[i][j]==1){
+        //             result += solve(i,j,matrix);
+        //         }
+        //     }
+        // }
+        // return result;
+
+
+// memo 
+         m = matrix.size();
+         n = matrix[0].size();
+        vector<vector<int>> t(m+1,vector<int>(n+1,-1));
+        int result = 0;
+        for(int i =0 ; i<m; i++){
+            for(int j =0 ; j<n; j++){
+                if(matrix[i][j]==1){
+                    result += solve(i,j,matrix,t);
+                }
+            }
+        }
+        return result;
+    }
+};
