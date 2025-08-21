@@ -1,0 +1,39 @@
+1504. Count Submatrices With All Ones
+
+https://leetcode.com/problems/count-submatrices-with-all-ones/description/?envType=daily-question&envId=2025-08-21
+
+
+class Solution {
+public:
+    int ONEdarray(vector<int>vec){
+        int cons =0;
+        int subcount = 0;
+        for(int &val : vec){
+            if(val==0){
+                cons=0;
+            }
+            else{
+                cons++;
+            }
+            subcount+=cons;
+        }
+        return subcount;
+    }
+    int numSubmat(vector<vector<int>>& mat) {
+        int m = mat.size();
+        int n = mat[0].size();
+        int result = 0;
+        // tc o(m*m*n)
+        // sc o(n)
+        for(int startrow = 0; startrow<m; startrow++){
+            vector<int>vec(n,1);
+            for(int endrow=startrow; endrow<m; endrow++){
+                for(int col =0; col<n; col++){
+                    vec[col]= vec[col] & mat[endrow][col];
+                }
+                result += ONEdarray(vec);
+            }
+        }
+        return result;
+    }
+};
