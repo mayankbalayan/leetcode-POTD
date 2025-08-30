@@ -1,0 +1,82 @@
+3459. Length of Longest V-Shaped Diagonal Segment
+
+https://leetcode.com/problems/length-of-longest-v-shaped-diagonal-segment/?envType=daily-question&envId=2025-08-27
+
+  #include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    // 4 diagonal directions:
+    // 0 = ↘ (down-right), 1 = ↙ (down-left),
+    // 2 = ↖ (up-left),   3 = ↗ (up-right)
+    vector<vector<int>> directions = {{1,1}, {1,-1}, {-1,-1}, {-1,1}};
+
+    int lenOfVDiagonal(vector<vector<int>>& grid) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+
+        // memo[row][col][state] stores the best answer from (row,col) in a certain state
+        // state = direction * 2 + canTurn
+        // direction ∈ [0..3], canTurn ∈ {0,1}
+        vector<vector<vector<int>>> memo(rows, vector<vector<int>>(cols, vector<int>(8, 0)));
+
+        int best = 0;
+
+        // Start only from cells that are "1" (the start of the sequence)
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] != 1) continue;
+
+                // Try starting in all 4 diagonal directions
+                for (int dir = 0; dir < 4; dir++) {
+                    int length = 1 + dfs(i, j, dir, 1, 2, grid, memo); // start with next target=2
+                    best = max(best, length);
+                }
+            }
+        }
+
+        return best;
+    }
+
+    // DFS with memoization
+    // (r,c) = current cell
+    // dir = current diagonal direction
+    // canTurn = 1 if we still can make one clockwise turn, else 0
+    // target = the value we need at the next cell (alternates between 2 and 0)
+    int dfs(int r, int c, int dir, int canTurn, int target,
+            vector<vector<int>>& grid,
+            vector<vector<vector<int>>>& memo) {
+
+        int rows = grid.size();
+        int cols = grid[0].size();
+
+        // Move one step in the current direction
+        int nr = r + directions[dir][0];
+        int nc = c + directions[dir][1];
+
+        // Out of bounds OR wrong number → stop
+        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || grid[nr][nc] != target) {
+            return 0;
+        }
+
+        // Encode state for memo: direction*2 + canTurn
+        int state = dir * 2 + canTurn;
+        if (memo[nr][nc][state] > 0) {
+            return memo[nr][nc][state];
+        }
+
+        int result = 0;
+
+        // Continue straight in the same direction
+        result = max(result, 1 + dfs(nr, nc, dir, canTurn, 2 - target, grid, memo));
+
+        // Optionally take a 90° clockwise turn (only once)
+        if (canTurn == 1) {
+            int newDir = (dir + 1) % 4; // clockwise turn
+            result = max(result, 1 + dfs(nr, nc, newDir, 0, 2 - target, grid, memo));
+        }
+
+        return memo[nr][nc][state] = result;
+    }
+};
