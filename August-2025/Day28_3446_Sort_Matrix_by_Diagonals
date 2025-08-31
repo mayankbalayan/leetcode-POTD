@@ -1,0 +1,39 @@
+3446. Sort Matrix by Diagonals
+
+
+https://leetcode.com/problems/sort-matrix-by-diagonals/description/?envType=daily-question&envId=2025-08-28
+
+
+class Solution {
+public:
+    vector<vector<int>> sortMatrix(vector<vector<int>>& grid) {
+      int n=grid.size();
+      unordered_map<int,vector<int>>mp;
+      //collect the same diagonal elements under the same key
+      for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            int key=i-j;//diagonal elements has same i-j value,hence vector is used
+            mp[key].push_back(grid[i][j]);
+        }
+      } 
+      //sort the diagonal elements according to their key values
+      for(auto& [key,value]:mp){
+        if(key>=0){
+         sort(value.begin(),value.end(),greater<int>());//descending
+        }
+        else{
+         sort(value.begin(),value.end());//ascending
+        }
+      }
+      //now use a map to store and increase the index value in each diagonal so that 
+      //track is kept in each diagonal vector
+      unordered_map<int,int>ind;
+       for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            int key=i-j;
+            grid[i][j]=mp[key][ind[key]++];
+        }
+      } 
+      return grid;
+    }
+};
