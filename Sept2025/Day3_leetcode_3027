@@ -1,0 +1,38 @@
+3027. Find the Number of Ways to Place People II
+
+
+https://leetcode.com/problems/find-the-number-of-ways-to-place-people-ii/description/?envType=daily-question&envId=2025-09-03
+
+
+
+class Solution {
+public:
+    int numberOfPairs(vector<vector<int>>& points) {
+        int n = points.size();
+        
+        // sort points by x decreasing, then y increasing
+        sort(points.begin(), points.end(), [](const vector<int>& a, const vector<int>& b){
+            if (a[0] == b[0]) return a[1] < b[1];
+            return a[0] > b[0];
+        });
+        
+        int cnt = 0;
+        // enumerate each point as left (higher x, top-left)
+        for (int i = 0; i < n - 1; i++) {
+            int yi = points[i][1];
+            int y = INT_MAX;  // lowest y seen so far
+            // enumerate right points
+            for (int j = i + 1; j < n; j++) {
+                int yj = points[j][1];
+                // valid pair if yj >= yi (not below top-left point)
+                // and y > yj (ensures no point in between)
+                if (yj >= yi && y > yj) {
+                    cnt++;
+                    y = yj;
+                    if (yi == yj) break; // no further valid j possible
+                }
+            }
+        }
+        return cnt;
+    }
+};
