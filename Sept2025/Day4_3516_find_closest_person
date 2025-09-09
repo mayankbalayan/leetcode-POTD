@@ -1,0 +1,16 @@
+
+3516. Find Closest Person
+
+https://leetcode.com/problems/find-closest-person/description/?envType=daily-question&envId=2025-09-04
+
+
+class Solution {
+public:
+    int findClosest(int x, int y, int z) {
+        int zx = abs(z-x); // difference between the third person and the first 
+        int zy = abs(z-y); // difference between the third person and the second
+        if(zx == zy) return 0; // when both reach at same time
+         else if(zx < zy) return 1; // when 1 reach first
+        else  return 2; // when 2nd reach first
+    }
+};
